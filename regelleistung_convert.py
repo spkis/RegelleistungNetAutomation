@@ -11,7 +11,7 @@ results_folder = 'results_xlsx'
 os.makedirs(results_folder, exist_ok=True)
 
 # Define the URL with placeholders for date
-base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymousresults?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
+base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/resultsoverview?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
 
 # Build the full URL with the current date
 url = base_url.format(current_date)
