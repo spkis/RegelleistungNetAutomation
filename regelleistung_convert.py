@@ -51,3 +51,23 @@ try:
 
 except Exception as e:
     print(f'XLSX to CSV conversion error: {str(e)}')
+
+# Import shutil for file operations
+import shutil
+
+def move_file_to_folder(file_name, target_folder):
+    """
+    Move a file to a specific folder.
+    """
+    # Create the folder if it doesn't exist
+    if not os.path.exists(target_folder):
+        os.makedirs(target_folder)
+    
+    # Construct the target path
+    target_path = os.path.join(target_folder, file_name)
+    
+    # Move the file
+    shutil.move(file_name, target_path)
+
+# Move the output.csv file to the telegraf_import folder
+move_file_to_folder('output.csv', 'telegraf_import')
