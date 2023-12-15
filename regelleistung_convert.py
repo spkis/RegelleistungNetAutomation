@@ -38,7 +38,7 @@ except Exception as e:
 
 # Create the input XLSX filename based on the current date
 input_xlsx_file = os.path.join(results_folder, output_filename)
-output_csv_file = 'output.csv'
+output_csv_file = f'output_{current_date}.csv'
 
 try:
     # Read the downloaded XLSX file into a DataFrame
@@ -70,4 +70,4 @@ def move_file_to_folder(file_name, target_folder):
     shutil.move(file_name, target_path)
 
 # Move the output.csv file to the telegraf_import folder
-move_file_to_folder('output.csv', 'telegraf_import')
+move_file_to_folder(output_csv_file, 'telegraf_import')
