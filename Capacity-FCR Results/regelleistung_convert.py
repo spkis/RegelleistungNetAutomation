@@ -40,9 +40,15 @@ except Exception as e:
 input_xlsx_file = os.path.join(results_folder, output_filename)
 output_csv_file = f'output_{current_date}.csv'
 
+# Add additional value which is used for telegraf to make a proper measurement name
+measurement_name = "fcr_results"
+
 try:
     # Read the downloaded XLSX file into a DataFrame
     df = pd.read_excel(input_xlsx_file)
+
+    # Adding a new column "measurement_name" from configurable option
+    df['measurement_name'] = measurement_name
 
     # Save the DataFrame as a CSV file
     df.to_csv(output_csv_file, index=False)
