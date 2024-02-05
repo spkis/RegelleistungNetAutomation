@@ -11,8 +11,8 @@ results_folder = 'results_xlsx'
 os.makedirs(results_folder, exist_ok=True)
 
 # Define the URL with placeholders for date
-base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymousresults?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
-# sample url https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymousresults?date=2024-02-04&exportFormat=xlsx&market=CAPACITY&productTypes=FCR
+base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymresults?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=aFRR"
+# sample url https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymresults?date=2024-02-05&exportFormat=xlsx&market=CAPACITY&productTypes=aFRR
 
 # Build the full URL with the current date
 url = base_url.format(current_date)
@@ -21,7 +21,7 @@ url = base_url.format(current_date)
 output_filename = f"{current_date}_results.xlsx"
 
 # Add additional value which is used for telegraf to make a proper measurement name
-measurement_name = "capacity_fcr_demands"
+measurement_name = "capacity_afrr_anonymresults"
 
 try:
     # Send a GET request to the URL
@@ -44,13 +44,13 @@ except Exception as e:
 input_xlsx_file = os.path.join(results_folder, output_filename)
 output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
-
 try:
     # Read the downloaded XLSX file into a DataFrame
     df = pd.read_excel(input_xlsx_file)
 
     # Adding a new column "measurement_name" from configurable option
     df['measurement_name'] = measurement_name
+
     # Save the DataFrame as a CSV file
     df.to_csv(output_csv_file, index=False)
 

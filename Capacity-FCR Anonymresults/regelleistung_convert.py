@@ -20,6 +20,9 @@ url = base_url.format(current_date)
 # Define the output filename with the current date
 output_filename = f"{current_date}_results.xlsx"
 
+# Add additional value which is used for telegraf to make a proper measurement name
+measurement_name = "capacity_fcr_anonymresults"
+
 try:
     # Send a GET request to the URL
     response = requests.get(url)
@@ -39,10 +42,7 @@ except Exception as e:
 
 # Create the input XLSX filename based on the current date
 input_xlsx_file = os.path.join(results_folder, output_filename)
-output_csv_file = f'output_{current_date}.csv'
-
-# Add additional value which is used for telegraf to make a proper measurement name
-measurement_name = "fcr_anonymresults"
+output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
 try:
     # Read the downloaded XLSX file into a DataFrame
