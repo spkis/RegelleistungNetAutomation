@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 # Define the current date
@@ -11,14 +11,16 @@ results_folder = 'results_xlsx'
 os.makedirs(results_folder, exist_ok=True)
 
 # Define the URL with placeholders for date
-base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymousresults?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
-# sample url https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/anonymousresults?date=2024-02-04&exportFormat=xlsx&market=CAPACITY&productTypes=FCR
+base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/resultsoverview?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
 
 # Build the full URL with the current date
 url = base_url.format(current_date)
 
 # Define the output filename with the current date
 output_filename = f"{current_date}_results.xlsx"
+
+# Add additional value which is used for telegraf to make a proper measurement name
+measurement_name = "capacity_fcr_results"
 
 try:
     # Send a GET request to the URL
@@ -39,20 +41,38 @@ except Exception as e:
 
 # Create the input XLSX filename based on the current date
 input_xlsx_file = os.path.join(results_folder, output_filename)
-output_csv_file = f'output_{current_date}.csv'
+output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
-# Add additional value which is used for telegraf to make a proper measurement name
-measurement_name = "fcr_anonymresults"
+def expand_rows_and_add_time(df):
+    expanded_rows = []
+    for _, row in df.iterrows():
+        product_parts = row['PRODUCTNAME'].split('_')
+        start_hour = int(product_parts[1])
+        end_hour = int(product_parts[2])
+        
+        for hour in range(start_hour, end_hour):
+            new_row = row.copy()
+            # Check if DATE_FROM is already a datetime object
+            if isinstance(row['DATE_FROM'], datetime):
+                date_from = row['DATE_FROM']
+            else:
+                date_from = datetime.strptime(row['DATE_FROM'], '%Y-%m-%d')
+            valid_date = date_from + timedelta(hours=hour)
+            new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+            
+            # new_row['start_time'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+            # end_time = valid_date + timedelta(hours=1) - timedelta(seconds=1)
+            # new_row['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
+            
+            expanded_rows.append(new_row)
+    
+    return pd.DataFrame(expanded_rows)
 
 try:
-    # Read the downloaded XLSX file into a DataFrame
     df = pd.read_excel(input_xlsx_file)
-
-    # Adding a new column "measurement_name" from configurable option
     df['measurement_name'] = measurement_name
-
-    # Save the DataFrame as a CSV file
-    df.to_csv(output_csv_file, index=False)
+    expanded_df = expand_rows_and_add_time(df)
+    expanded_df.to_csv(output_csv_file, index=False)
 
     print(f'XLSX to CSV conversion successful. CSV file saved as {output_csv_file}')
 

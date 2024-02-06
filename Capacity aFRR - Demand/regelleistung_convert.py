@@ -11,13 +11,17 @@ results_folder = 'results_xlsx'
 os.makedirs(results_folder, exist_ok=True)
 
 # Define the URL with placeholders for date
-base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/resultsoverview?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
+base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/demands?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=aFRR"
+# sample url https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/demands?date=2024-02-05&exportFormat=xlsx&market=CAPACITY&productTypes=aFRR
 
 # Build the full URL with the current date
 url = base_url.format(current_date)
 
 # Define the output filename with the current date
 output_filename = f"{current_date}_results.xlsx"
+
+# Add additional value which is used for telegraf to make a proper measurement name
+measurement_name = "capacity_afrr_demand"
 
 try:
     # Send a GET request to the URL
@@ -38,10 +42,7 @@ except Exception as e:
 
 # Create the input XLSX filename based on the current date
 input_xlsx_file = os.path.join(results_folder, output_filename)
-output_csv_file = f'output_{current_date}.csv'
-
-# Add additional value which is used for telegraf to make a proper measurement name
-measurement_name = "fcr_results"
+output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
 try:
     # Read the downloaded XLSX file into a DataFrame
