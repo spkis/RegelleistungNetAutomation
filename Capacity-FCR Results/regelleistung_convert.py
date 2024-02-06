@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 # Define the current date
@@ -43,15 +43,36 @@ except Exception as e:
 input_xlsx_file = os.path.join(results_folder, output_filename)
 output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
+def expand_rows_and_add_time(df):
+    expanded_rows = []
+    for _, row in df.iterrows():
+        product_parts = row['PRODUCTNAME'].split('_')
+        start_hour = int(product_parts[1])
+        end_hour = int(product_parts[2])
+        
+        for hour in range(start_hour, end_hour):
+            new_row = row.copy()
+            # Check if DATE_FROM is already a datetime object
+            if isinstance(row['DATE_FROM'], datetime):
+                date_from = row['DATE_FROM']
+            else:
+                date_from = datetime.strptime(row['DATE_FROM'], '%Y-%m-%d')
+            valid_date = date_from + timedelta(hours=hour)
+            new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+            
+            # new_row['start_time'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+            # end_time = valid_date + timedelta(hours=1) - timedelta(seconds=1)
+            # new_row['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
+            
+            expanded_rows.append(new_row)
+    
+    return pd.DataFrame(expanded_rows)
+
 try:
-    # Read the downloaded XLSX file into a DataFrame
     df = pd.read_excel(input_xlsx_file)
-
-    # Adding a new column "measurement_name" from configurable option
     df['measurement_name'] = measurement_name
-
-    # Save the DataFrame as a CSV file
-    df.to_csv(output_csv_file, index=False)
+    expanded_df = expand_rows_and_add_time(df)
+    expanded_df.to_csv(output_csv_file, index=False)
 
     print(f'XLSX to CSV conversion successful. CSV file saved as {output_csv_file}')
 
