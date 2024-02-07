@@ -17,7 +17,7 @@ base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/ten
 url = base_url.format(current_date)
 
 # Define the output filename with the current date
-output_filename = f"{current_date}_results.xlsx"
+output_filename = f"{current_date}_capacity_fcr_results.xlsx"
 
 # Add additional value which is used for telegraf to make a proper measurement name
 measurement_name = "capacity_fcr_results"
