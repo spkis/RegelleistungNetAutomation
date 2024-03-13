@@ -3,7 +3,7 @@ import requests
 from datetime import datetime, timedelta
 import io  # For handling in-memory bytes objects like files
 
-import pandas as pd
+#import pandas as pd
 
 # Set display options
 pd.set_option('display.max_columns', None)  # Show all columns
