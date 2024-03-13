@@ -3,6 +3,15 @@ import requests
 from datetime import datetime, timedelta
 import io  # For handling in-memory bytes objects like files
 
+import pandas as pd
+
+# Set display options
+pd.set_option('display.max_columns', None)  # Show all columns
+pd.set_option('display.max_rows', 50)  # Adjust number of rows to display
+
+# Your script continues here...
+
+
 # Define the current date
 current_date = datetime.now().strftime('%Y-%m-%d')
 
@@ -52,7 +61,7 @@ try:
         expanded_df = expand_rows_and_add_time(df)
         
         # Print the processed DataFrame to console
-        print(expanded_df.head())  # Show first few rows for brevity
+        print(expanded_df)  # Show first few rows for brevity
 
     else:
         print(f'File download failed. Status code: {response.status_code}')
