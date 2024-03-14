@@ -1,34 +1,54 @@
+import pandas as pd
+import requests
+from datetime import datetime, timedelta
+import io  # For handling in-memory bytes objects like files
 import quixstreams as qx
-import time
-import datetime
-import math
 import os
 
+# Define the current date
+current_date = datetime.now().strftime('%Y-%m-%d')
 
-# Quix injects credentials automatically to the client. 
-# Alternatively, you can always pass an SDK token manually as an argument.
+# Define the URL with placeholders for date
+base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/resultsoverview?date={}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
+
+# Build the full URL with the current date
+url = base_url.format(current_date)
+
+# Initialize Quix streaming client
 client = qx.QuixStreamingClient()
 
 # Open the output topic where to write data out
-topic_producer = client.get_topic_producer(topic_id_or_name = os.environ["output"])
+topic_producer = client.get_topic_producer(topic_id_or_name=os.environ["QUIX_OUTPUT_TOPIC"])
 
-# Set stream ID or leave parameters empty to get stream ID generated.
+# Create a stream for the data
 stream = topic_producer.create_stream()
-stream.properties.name = "Hello World Python stream"
+stream.properties.name = "Energy Data Stream"
 
-# Add metadata about time series data you are about to send. 
-stream.timeseries.add_definition("ParameterA").set_range(-1.2, 1.2)
-stream.timeseries.buffer.time_span_in_milliseconds = 100
+try:
+    # Send a GET request to the URL and load the content directly into a DataFrame
+    response = requests.get(url)
+    if response.status_code == 200:
+        with io.BytesIO(response.content) as file:
+            df = pd.read_excel(file)
+        print(f'Data loaded successfully for {current_date}')
 
-print("Sending values for 30 seconds.")
+        # Your data processing function here...
+        # Assuming it modifies 'df' to become 'expanded_df'
 
-for index in range(0, 3000):
-    stream.timeseries \
-        .buffer \
-        .add_timestamp(datetime.datetime.utcnow()) \
-        .add_value("ParameterA", math.sin(index / 200.0) + math.sin(index) / 5.0) \
-        .publish()
-    time.sleep(0.01)
+        # Iterate over the processed DataFrame and send each row as a time series data point
+        for index, row in expanded_df.iterrows():
+            timestamp = pd.to_datetime(row['date_valid'])  # Assuming 'date_valid' is your timestamp column
+            parameter_a_value = row['YourDataColumn']  # Replace 'YourDataColumn' with the actual column name you want to stream
+            
+            # Add data to the stream
+            stream.timeseries.buffer.add_timestamp(timestamp) \
+                                   .add_value("ParameterA", parameter_a_value) \
+                                   .publish()
+    else:
+        print(f'File download failed. Status code: {response.status_code}')
+except Exception as e:
+    print(f'An error occurred: {str(e)}')
 
+# Closing the stream after sending all data points
 print("Closing stream")
 stream.close()
