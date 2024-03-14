@@ -14,6 +14,9 @@ base_url = "https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/ten
 # Build the full URL with the current date
 url = base_url.format(current_date)
 
+# Add additional value which is used for telegraf to make a proper measurement name
+measurement_name = "capacity_fcr_results"
+
 # Initialize Quix streaming client
 client = qx.QuixStreamingClient()
 
@@ -34,6 +37,31 @@ try:
 
         # Your data processing function here...
         # Assuming it modifies 'df' to become 'expanded_df'
+         # Process the DataFrame as before
+        def expand_rows_and_add_time(df):
+            expanded_rows = []
+            for _, row in df.iterrows():
+                product_parts = row['PRODUCTNAME'].split('_')
+                start_hour = int(product_parts[1])
+                end_hour = int(product_parts[2])
+                
+                for hour in range(start_hour, end_hour):
+                    new_row = row.copy()
+                    # Check if DATE_FROM is already a datetime object
+                    if isinstance(row['DATE_FROM'], datetime):
+                        date_from = row['DATE_FROM']
+                    else:
+                        date_from = datetime.strptime(row['DATE_FROM'], '%Y-%m-%d')
+                    valid_date = date_from + timedelta(hours=hour)
+                    new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+                    expanded_rows.append(new_row)
+            
+            return pd.DataFrame(expanded_rows)
+
+        # Apply the processing
+        df['measurement_name'] = measurement_name
+        expanded_df = expand_rows_and_add_time(df)
+        
 
         # Iterate over the processed DataFrame and send each row as a time series data point
         for index, row in expanded_df.iterrows():
