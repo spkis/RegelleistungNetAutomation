@@ -66,7 +66,7 @@ try:
         # Iterate over the processed DataFrame and send each row as a time series data point
         for index, row in expanded_df.iterrows():
             timestamp = pd.to_datetime(row['date_valid'])  # Assuming 'date_valid' is your timestamp column
-            parameter_a_value = row['YourDataColumn']  # Replace 'YourDataColumn' with the actual column name you want to stream
+            parameter_a_value = row['GERMANY_SETTLEMENTCAPACITY_PRICE_[EUR/MW]']  # Replace 'YourDataColumn' with the actual column name you want to stream
             
             # Add data to the stream
             stream.timeseries.buffer.add_timestamp(timestamp) \
