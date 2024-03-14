@@ -21,7 +21,7 @@ measurement_name = "capacity_fcr_results"
 client = qx.QuixStreamingClient()
 
 # Open the output topic where to write data out
-topic_producer = client.get_topic_producer(topic_id_or_name=os.environ["QUIX_OUTPUT_TOPIC"])
+topic_producer = client.get_topic_producer(topic_id_or_name=os.environ["German_Settlement_Price"])
 
 # Create a stream for the data
 stream = topic_producer.create_stream()
