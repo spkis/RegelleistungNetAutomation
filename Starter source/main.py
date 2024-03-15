@@ -35,6 +35,7 @@ try:
         with io.BytesIO(response.content) as file:
             df = pd.read_excel(file)
         print(f'Data loaded successfully for {current_date}')
+        print(df)
 
         # Your data processing function here...
         # Assuming it modifies 'df' to become 'expanded_df'
