@@ -38,8 +38,7 @@ try:
         print(f'Data loaded successfully for {current_date}')
 
         # Iterate over the processed DataFrame and send each row as a time series data point
-        for row in df.iterrows():
-            print(row)
+        print(df.to_json(orient='records', lines=True))
     else:
         print(f'File download failed. Status code: {response.status_code}')
 except Exception as e:
