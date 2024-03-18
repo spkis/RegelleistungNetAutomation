@@ -34,11 +34,15 @@ try:
     if response.status_code == 200:
         with io.BytesIO(response.content) as file:
             df = pd.read_excel(file)
+
+            json = df.to_json(orient='records', lines=True)
         
-        print(f'Data loaded successfully for {current_date}')
+            print(f'Data loaded successfully for {current_date}')
+
+            for row in json:
+                
 
         # Iterate over the processed DataFrame and send each row as a time series data point
-        print(df.to_json(orient='records', lines=True))
     else:
         print(f'File download failed. Status code: {response.status_code}')
 except Exception as e:
