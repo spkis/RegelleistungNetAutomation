@@ -32,7 +32,7 @@ with app.get_producer() as producer:
             with io.BytesIO(response.content) as file:
                 df = pd.read_excel(file)
 
-                json_str = df.to_json(orient='records', lines=True)
+                json_str = df.to_json(orient='records')
                 print(json_str)
             
                 print(f'Data loaded successfully for {current_date}')
