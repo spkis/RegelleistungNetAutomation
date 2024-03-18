@@ -39,8 +39,6 @@ with app.get_producer() as producer:
                     print(row)
                     producer.produce(topic.name, json.dumps(row), str(row['PRODUCTNAME']))
                     
-
-            # Iterate over the processed DataFrame and send each row as a time series data point
         else:
             print(f'File download failed. Status code: {response.status_code}')
     except Exception as e:
