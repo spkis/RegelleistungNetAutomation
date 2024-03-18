@@ -36,6 +36,7 @@ with app.get_producer() as producer:
                 print(f'Data loaded successfully for {current_date}')
 
                 for row in json:
+                    print(row)
                     producer.produce(topic.name, row, str(row['PRODUCTNAME']))
                     
 
