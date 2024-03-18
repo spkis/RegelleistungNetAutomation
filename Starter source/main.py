@@ -29,17 +29,15 @@ with app.get_producer() as producer:
         # Send a GET request to the URL and load the content directly into a DataFrame
         response = requests.get(url)
         if response.status_code == 200:
-            print(response.content)
             with io.BytesIO(response.content) as file:
                 df = pd.read_excel(file)
 
-                json_array = df.to_json(orient='records', lines=True)
+                json_str = df.to_json(orient='records', lines=True)
             
                 print(f'Data loaded successfully for {current_date}')
 
-                for row in json_array:
-                    if row is None:
-                        continue
+                for row in json.loads(json_str):
+:
                     print(row)
                     producer.produce(topic.name, json.dumps(row), str(row['PRODUCTNAME']))
                     
