@@ -38,7 +38,7 @@ try:
         print(f'Data loaded successfully for {current_date}')
 
         # Iterate over the processed DataFrame and send each row as a time series data point
-        for index, row in df:
+        for row in df.iterrows():
             print(row)
     else:
         print(f'File download failed. Status code: {response.status_code}')
