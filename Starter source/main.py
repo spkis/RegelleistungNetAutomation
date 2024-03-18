@@ -36,7 +36,7 @@ with app.get_producer() as producer:
                 print(f'Data loaded successfully for {current_date}')
 
                 for row in json:
-                    producer.produce(topic.name, row, row['PRODUCTNAME'])
+                    producer.produce(topic.name, row, str(row['PRODUCTNAME']))
                     
 
             # Iterate over the processed DataFrame and send each row as a time series data point
