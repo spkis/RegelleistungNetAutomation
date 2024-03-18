@@ -2,7 +2,6 @@ import pandas as pd
 import requests
 from datetime import datetime, timedelta
 import io  # For handling in-memory bytes objects like files
-import quixstreams as qx
 import os
 
 # Define the current date
