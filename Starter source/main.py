@@ -36,7 +36,7 @@ with app.get_producer() as producer:
                 print(f'Data loaded successfully for {current_date}')
 
                 for row in json:
-                    producer.produce(topic.name, row, )
+                    producer.produce(topic.name, row, row['PRODUCTNAME'])
                     
 
             # Iterate over the processed DataFrame and send each row as a time series data point
@@ -47,3 +47,5 @@ with app.get_producer() as producer:
 
     # Closing the stream after sending all data points
     print("Closing stream")
+    producer.flush()
+    print("Done.")
