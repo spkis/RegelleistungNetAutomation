@@ -29,6 +29,7 @@ with app.get_producer() as producer:
         # Send a GET request to the URL and load the content directly into a DataFrame
         response = requests.get(url)
         if response.status_code == 200:
+            print(response.content)
             with io.BytesIO(response.content) as file:
                 df = pd.read_excel(file)
 
