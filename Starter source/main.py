@@ -20,9 +20,7 @@ url = base_url.format(current_date)
 
 topic = app.topic(name=os.environ["output"], value_serializer='json')
 
-
 # strings for key and headers will be serialized to bytes by default
-i = 0
 with app.get_producer() as producer:
 
     try:
