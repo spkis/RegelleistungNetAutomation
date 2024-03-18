@@ -34,32 +34,12 @@ try:
     if response.status_code == 200:
         with io.BytesIO(response.content) as file:
             df = pd.read_excel(file)
+        
         print(f'Data loaded successfully for {current_date}')
 
-        # Your data processing function here...
-        # Assuming it modifies 'df' to become 'expanded_df'
-         # Process the DataFrame as before
-        def expand_rows_and_add_time(df):
-            expanded_rows = []
-            for _, row in df.iterrows():
-                print(row)
-            
-            return pd.DataFrame(expanded_rows)
-
-        # Apply the processing
-        df['measurement_name'] = measurement_name
-        expanded_df = expand_rows_and_add_time(df)
-        
-
         # Iterate over the processed DataFrame and send each row as a time series data point
-        for index, row in expanded_df.iterrows():
-            timestamp = pd.to_datetime(row['date_valid'])  # Assuming 'date_valid' is your timestamp column
-            parameter_a_value = row['GERMANY_SETTLEMENTCAPACITY_PRICE_[EUR/MW]']  # Replace 'YourDataColumn' with the actual column name you want to stream
-            
-            # Add data to the stream
-            stream.timeseries.buffer.add_timestamp(timestamp) \
-                                   .add_value("ParameterA", parameter_a_value) \
-                                   .publish()
+        for index, row in df:
+            print(row)
     else:
         print(f'File download failed. Status code: {response.status_code}')
 except Exception as e:
