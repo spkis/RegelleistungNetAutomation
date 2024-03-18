@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta
 import io  # For handling in-memory bytes objects like files
 import os
+import json
 from quixstreams import Application
 
 app = Application.Quix()
@@ -31,13 +32,13 @@ with app.get_producer() as producer:
             with io.BytesIO(response.content) as file:
                 df = pd.read_excel(file)
 
-                json = df.to_json(orient='records', lines=True)
+                json_array = df.to_json(orient='records', lines=True)
             
                 print(f'Data loaded successfully for {current_date}')
 
-                for row in json:
+                for row in json_array:
                     print(row)
-                    producer.produce(topic.name, row, str(row['PRODUCTNAME']))
+                    producer.produce(topic.name, json.dumps(row), str(row['PRODUCTNAME']))
                     
 
             # Iterate over the processed DataFrame and send each row as a time series data point
