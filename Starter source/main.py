@@ -35,7 +35,6 @@ try:
         with io.BytesIO(response.content) as file:
             df = pd.read_excel(file)
         print(f'Data loaded successfully for {current_date}')
-        print(df)
 
         # Your data processing function here...
         # Assuming it modifies 'df' to become 'expanded_df'
@@ -43,20 +42,7 @@ try:
         def expand_rows_and_add_time(df):
             expanded_rows = []
             for _, row in df.iterrows():
-                product_parts = row['PRODUCTNAME'].split('_')
-                start_hour = int(product_parts[1])
-                end_hour = int(product_parts[2])
-                
-                for hour in range(start_hour, end_hour):
-                    new_row = row.copy()
-                    # Check if DATE_FROM is already a datetime object
-                    if isinstance(row['DATE_FROM'], datetime):
-                        date_from = row['DATE_FROM']
-                    else:
-                        date_from = datetime.strptime(row['DATE_FROM'], '%Y-%m-%d')
-                    valid_date = date_from + timedelta(hours=hour)
-                    new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
-                    expanded_rows.append(new_row)
+                print(row)
             
             return pd.DataFrame(expanded_rows)
 
