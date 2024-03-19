@@ -14,7 +14,7 @@ deployments:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: input
         inputType: InputTopic
@@ -56,6 +56,21 @@ deployments:
         description: The fields to include when writing the measurement data
         required: true
         value: "['field1','field2']"
+  - name: Regelleistung source
+    application: Starter source
+    deploymentType: Service
+    version: ea75cbb53a7962b90a78c5da188b0ba22c36c9c4
+    resources:
+      cpu: 200
+      memory: 500
+      replicas: 1
+    desiredStatus: Running
+    variables:
+      - name: output
+        inputType: OutputTopic
+        description: This is the output topic for hello world data
+        required: true
+        value: hello-world-source
 
 # This section describes the Topics of the data pipeline
 topics:
