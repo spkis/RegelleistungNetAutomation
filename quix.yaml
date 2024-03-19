@@ -5,7 +5,57 @@ metadata:
   version: 1.0
 
 # This section describes the Deployments of the data pipeline
-deployments: []
+deployments:
+  - name: InfluxDB 3.0
+    application: InfluxDB 3.0
+    deploymentType: Service
+    version: 0cef18ccd7e1006425f4867b417139b2165d05b3
+    resources:
+      cpu: 200
+      memory: 500
+      replicas: 1
+    desiredStatus: Running
+    variables:
+      - name: input
+        inputType: InputTopic
+        description: This is the input topic
+        required: true
+        value: hello-world-source
+      - name: INFLUXDB_HOST
+        inputType: FreeText
+        description: Host address for the InfluxDB instance.
+        required: true
+        value: 65741c4e-7652-4e57-82ea-24f263b67d0c.a.influxdb.io
+      - name: INFLUXDB_TOKEN
+        inputType: Secret
+        description: Authentication token to access InfluxDB.
+        required: true
+        secretKey: Regelleistung_Net2
+      - name: INFLUXDB_ORG
+        inputType: FreeText
+        description: Organization name in InfluxDB.
+        required: false
+        value: juniz
+      - name: INFLUXDB_DATABASE
+        inputType: FreeText
+        description: Database name in InfluxDB where data should be stored.
+        required: true
+        value: regelleistung_net_devtest2
+      - name: INFLUXDB_TAG_COLUMNS
+        inputType: FreeText
+        description: Columns to be used as tags when writing data to InfluxDB.
+        required: false
+        value: '["TYPE_OF_RESERVES","PRODUCTNAME"]'
+      - name: INFLUXDB_MEASUREMENT_NAME
+        inputType: FreeText
+        description: The InfluxDB measurement to write data to. If not specified, the name of the input topic will be used
+        required: false
+        value: quix_testing
+      - name: INFLUXDB_FIELD_KEYS
+        inputType: FreeText
+        description: The fields to include when writing the measurement data
+        required: true
+        value: "['field1','field2']"
 
 # This section describes the Topics of the data pipeline
 topics:
