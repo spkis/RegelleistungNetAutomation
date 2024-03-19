@@ -39,7 +39,7 @@ variables:
   - name: INFLUXDB_FIELD_KEYS
     inputType: FreeText
     description: The fields to include when writing the measurement data
-    defaultValue: "['field1','field2']"
+    defaultValue: "['PRODUCTNAME','CROSSBORDER_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','date_valid']"
     required: true
 dockerfile: dockerfile
 runEntryPoint: main.py
