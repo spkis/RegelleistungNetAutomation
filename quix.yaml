@@ -59,12 +59,12 @@ deployments:
   - name: Regelleistung source
     application: Starter source
     deploymentType: Service
-    version: tomas-v1
+    version: ea75cbb53a7962b90a78c5da188b0ba22c36c9c4
     resources:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: output
         inputType: OutputTopic
@@ -80,4 +80,11 @@ topics:
       partitions: 1
       replicationFactor: 2
       retentionInMinutes: 1440
+      retentionInBytes: 52428800
+  - name: regelleistung
+    persisted: false
+    configuration:
+      partitions: 4
+      replicationFactor: 2
+      retentionInMinutes: 43200
       retentionInBytes: 52428800
