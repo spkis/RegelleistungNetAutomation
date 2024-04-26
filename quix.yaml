@@ -55,7 +55,7 @@ deployments:
         inputType: FreeText
         description: The fields to include when writing the measurement data
         required: true
-        value: "['field1','field2']"
+        value: "['PRODUCTNAME','CROSSBORDER_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','date_valid']"
   - name: Regelleistung source
     application: Starter source
     deploymentType: Service
