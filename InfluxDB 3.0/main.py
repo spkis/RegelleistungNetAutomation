@@ -57,7 +57,7 @@ def send_data_to_influx(message):
         print(f"{str(datetime.datetime.utcnow())}: Persisted measurement to influx.")
     except Exception as e:
         print(f"{str(datetime.datetime.utcnow())}: Write failed")
-        print(str(points))
+        print(message)
         print(e)
         raise
 
