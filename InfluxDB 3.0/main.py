@@ -12,7 +12,7 @@ from influxdb_client_3 import InfluxDBClient3
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Application.Quix(consumer_group="influx-destination",
+app = Application.Quix(consumer_group="influx-destination-v1",
                        auto_offset_reset="earliest")
 
 input_topic = app.topic(os.environ["input"], value_deserializer=JSONDeserializer())
