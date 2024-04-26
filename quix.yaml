@@ -64,33 +64,13 @@ deployments:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: output
         inputType: OutputTopic
         description: This is the output topic for hello world data
         required: true
         value: regelleistung
-  - name: Processing
-    application: Processing
-    deploymentType: Service
-    version: 60267c4c18d9398034233a6e10ed01bb8d8d23e2
-    resources:
-      cpu: 200
-      memory: 500
-      replicas: 1
-    desiredStatus: Running
-    variables:
-      - name: input
-        inputType: InputTopic
-        description: Name of the input topic to listen to.
-        required: false
-        value: regelleistung
-      - name: processed
-        inputType: OutputTopic
-        description: Name of the output topic to write to.
-        required: false
-        value: transform
 
 # This section describes the Topics of the data pipeline
 topics:
