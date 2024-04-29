@@ -69,7 +69,7 @@ def expand_rows_and_add_time(df):
         start_hour = int(product_parts[1])
         end_hour = int(product_parts[2])
         
-    for hour in range(start_hour, end_hour):
+        for hour in range(start_hour, end_hour):
             new_row = row.copy()
             # Check if DATE_FROM is already a datetime object
             if isinstance(row['DATE_FROM'], datetime):
@@ -77,13 +77,13 @@ def expand_rows_and_add_time(df):
             else:
                 date_from = datetime.strptime(row['DATE_FROM'], '%Y-%m-%d')
             valid_date = date_from + timedelta(hours=hour)
-            new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
+            new_row['date_valid'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:23]
             
             # new_row['start_time'] = valid_date.strftime('%Y-%m-%dT%H:%M:%S')
             # end_time = valid_date + timedelta(hours=1) - timedelta(seconds=1)
             # new_row['end_time'] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
             
-            expanded_rows.append(new_row)    
+            expanded_rows.append(new_row)
     
     return pd.DataFrame(expanded_rows)
 
