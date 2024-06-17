@@ -1,2 +1,6 @@
 quixstreams==2.4.1
 python-dotenv
+pandas
+schedule
+requests
+openpyxl
