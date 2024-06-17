@@ -17,10 +17,14 @@ app = Application.Quix(consumer_group="influx-destination",
 
 input_topic = app.topic(os.environ["input"], value_deserializer=JSONDeserializer())
 
-# Read the environment variable and convert it to a dictionary
-tag_dict = ast.literal_eval(os.environ.get('INFLUXDB_TAG_COLUMNS', "{}"))
+# for debugging only!!!!
+# you can make a list directly here in the code and OUTCOMMENT the sections below
 #tags = ['country']
 #fields = ['timestamp', 'country', 'demand', 'price', 'deficit_surplus']
+
+# Read the environment variable and convert it to a dictionary
+tag_dict = ast.literal_eval(os.environ.get('INFLUXDB_TAG_COLUMNS', "{}"))
+
 tag_list = {tag: "" for tag in tag_dict}  # Create a dictionary from the list
 # Read the environment variable and convert it to a list
 tags_list = ast.literal_eval(os.environ.get('INFLUXDB_TAG_COLUMNS', "[]"))
