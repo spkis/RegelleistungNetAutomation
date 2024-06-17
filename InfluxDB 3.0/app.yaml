@@ -42,5 +42,5 @@ variables:
     defaultValue: "['timestamp','demand','price','deficit_surplus']"
     required: true
 dockerfile: dockerfile
-runEntryPoint: main_old.py
-defaultFile: main_old.py
+runEntryPoint: main.py
+defaultFile: main.py
