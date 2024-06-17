@@ -20,6 +20,8 @@ input_topic = app.topic(os.environ["input"], value_deserializer=JSONDeserializer
 # Read the environment variable and convert it to a dictionary
 tag_dict = ast.literal_eval(os.environ.get('INFLUXDB_TAG_COLUMNS', "{}"))
 tags = ['country']
+fields = ['timestamp', 'country', 'demand', 'price', 'deficit_surplus']
+
 # Read the environment variable for measurement name
 measurement_name = os.environ.get('INFLUXDB_MEASUREMENT_NAME', os.environ["input"])
 
