@@ -1,0 +1,11 @@
+services:
+  regelleistungnetautomation:
+    build: .
+    container_name: regelleistungnetautomation
+    image: regelleistungnetautomation:latest
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+    command: poetry run python main.py
