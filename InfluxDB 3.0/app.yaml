@@ -39,7 +39,7 @@ variables:
   - name: INFLUXDB_FIELD_KEYS
     inputType: FreeText
     description: The fields to include when writing the measurement data
-    defaultValue: "['timestamp','demand','price','deficit_surplus']"
+    defaultValue: "['timestamp','country','demand','price','deficit_surplus']"
     required: true
 dockerfile: dockerfile
 runEntryPoint: main.py
