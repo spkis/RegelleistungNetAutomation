@@ -3,9 +3,16 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
+from quixstreams import Application
+import uuid
+import os
+import json
 import schedule
 import time
 from io import BytesIO
+
+
+app = Application.Quix()
 
 def download_data():
     today = datetime.today().strftime('%Y-%m-%d')
@@ -85,10 +92,33 @@ def save_data(df):
     df.to_csv(file_name, index=False)
     print(f"Final data saved to {file_name}")
 
+
+# Stream setup
+topic = app.topic(name=os.environ["output"], value_serializer="json")
+
+
+def send_to_stream(df, topic):
+    with app.get_producer() as producer:
+        try:
+            json_str = df.to_json(orient="records", date_format="iso")
+            for row in json.loads(json_str):
+                # Generate a unique key for each message
+                message_key = str(uuid.uuid4())  # Use a unique key for each message
+                # Konvertiere das Row-Dictionary zu einem JSON-String, um es als Nachricht zu senden
+                message = json.dumps(row)
+                producer.produce(topic.name, value=message, key=message_key)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+        print("Closing stream")
+        producer.flush()
+        print("Done.")
+
 def main():
     file_content = download_data()
     df = process_data(file_content, hourly=True)  # Setzen Sie hourly=False, um vierstündliche Daten zu verwenden
     save_data(df)
+    send_to_stream(df, topic)
     return df
 
 def schedule_daily_run():
