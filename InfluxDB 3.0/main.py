@@ -34,32 +34,43 @@ influx3_client = InfluxDBClient3(token=os.environ["INFLUXDB_TOKEN"],
 
 def send_data_to_influx(message):
     logger.info(f"Processing message: {message}")
+    points = None  # Initialize points to ensure it exists
     try:
-        quixtime = message['timestamp'] #changed from "time"
-        # Get the name(s) and value(s) of the selected field(s)
-        # Using a single field in this example for simplicity
-        field1_name = field_keys[0]
-        field1_value = message[field_keys[0]]
+        # Extract the timestamp
+        quixtime = message['timestamp']
 
-        logger.info(f"Using field keys: {', '.join(field_keys)}")
+        # Extract the tags
+        tag_dict = {tag: message[tag] for tag in tags}
+
+        # Extract the fields
+        field_dict = {field: message[field] for field in fields if field not in tags and field != 'timestamp'}
+
+        logger.info(f"Using fields: {', '.join(field_dict.keys())}")
+        logger.info(f"Using tags: {', '.join(tag_dict.keys())}")
 
         # Using point dictionary structure
-        # See: https://docs.influxdata.com/influxdb/cloud-dedicated/reference/client-libraries/v3/python/#write-data-using-a-dict
         points = {
             "measurement": measurement_name,
             "tags": tag_dict,
-            "fields": {field1_name: field1_value},
+            "fields": field_dict,
             "time": quixtime
         }
 
         influx3_client.write(record=points, write_precision="ms")
         
         print(f"{str(datetime.datetime.utcnow())}: Persisted measurement to influx.")
+    except KeyError as e:
+        logger.error(f"KeyError: {str(e)} - Check if the key exists in the message")
+        print(f"{str(datetime.datetime.utcnow())}: Write failed due to missing key")
+        print(message)
+        print(points)
+        raise
     except Exception as e:
         print(f"{str(datetime.datetime.utcnow())}: Write failed")
         print(message)
         print(points)
         raise
+
 
 sdf = app.dataframe(input_topic)
 sdf = sdf.update(send_data_to_influx)
