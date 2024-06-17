@@ -8,13 +8,13 @@ metadata:
 deployments:
   - name: InfluxDB 3.0
     application: InfluxDB 3.0
-    deploymentType: Service
     version: latest
+    deploymentType: Service
     resources:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: input
         inputType: InputTopic
@@ -58,8 +58,8 @@ deployments:
         value: "['DATE_FROM','DATE_TO','PRODUCT_TYPE','TENDER_NUMBER','PRODUCTNAME','CROSSBORDER_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','AUSTRIA_DEMAND_[MW]','AUSTRIA_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','AUSTRIA_DEFICIT(-)_SURPLUS(+)_[MW]','BELGIUM_DEMAND_[MW]','BELGIUM_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','BELGIUM_DEFICIT(-)_SURPLUS(+)_[MW]','DENMARK_DEMAND_[MW]','DENMARK_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','DENMARK_DEFICIT(-)_SURPLUS(+)_[MW]','FRANCE_DEMAND_[MW]','FRANCE_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','FRANCE_DEFICIT(-)_SURPLUS(+)_[MW]','GERMANY_DEMAND_[MW]','GERMANY_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','GERMANY_DEFICIT(-)_SURPLUS(+)_[MW]','NETHERLANDS_DEMAND_[MW]','NETHERLANDS_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','NETHERLANDS_DEFICIT(-)_SURPLUS(+)_[MW]','SLOVENIA_DEMAND_[MW]','SLOVENIA_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','SLOVENIA_DEFICIT(-)_SURPLUS(+)_[MW]','SWITZERLAND_DEMAND_[MW]','SWITZERLAND_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','SWITZERLAND_DEFICIT(-)_SURPLUS(+)_[MW]','CZECH_REPUBLIC_DEMAND_[MW]','CZECH_REPUBLIC_SETTLEMENTCAPACITY_PRICE_[EUR/MW]','CZECH_REPUBLIC_DEFICIT(-)_SURPLUS(+)_[MW]','measurement_name','date_valid']"
   - name: Regelleistung source
     application: Starter source
-    deploymentType: Service
     version: ea75cbb53a7962b90a78c5da188b0ba22c36c9c4
+    deploymentType: Service
     resources:
       cpu: 200
       memory: 500
@@ -95,3 +95,5 @@ topics:
       replicationFactor: 2
       retentionInMinutes: 1440
       retentionInBytes: 52428800
+  - name: regelleistung-justresults
+    persisted: false
