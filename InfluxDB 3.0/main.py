@@ -5,7 +5,7 @@ from quixstreams import Application
 logger = logging.getLogger(__name__)
 
 # Define the fields and tags
-fields = ['timestamp', 'country', 'demand', 'price', 'deficit_surplus']
+fields = ['timestamp', 'demand', 'price', 'deficit_surplus']
 tags = ['country']
 measurement_name = "fcr_results"
 
