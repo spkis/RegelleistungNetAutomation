@@ -15,6 +15,10 @@ env.bak/
 venv.bak/
 .site/
 .build/
+.venv/
+
+.vscode/
+certificates/
 
 # Installer logs
 pip-log.txt
