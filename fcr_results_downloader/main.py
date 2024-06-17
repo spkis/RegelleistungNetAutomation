@@ -1,24 +1,10 @@
-import os
-from quixstreams import Application
+# main.py
 
-# for local dev, load env vars from a .env file
-from dotenv import load_dotenv
-load_dotenv()
-
-app = Application(consumer_group="transformation-v1", auto_offset_reset="earliest")
-
-input_topic = app.topic(os.environ["input"])
-output_topic = app.topic(os.environ["output"])
-
-sdf = app.dataframe(input_topic)
-
-# put transformation logic here
-# see docs for what you can do
-# https://quix.io/docs/get-started/quixtour/process-threshold.html
-
-sdf = sdf.update(lambda row: print(row))
-
-sdf = sdf.to_topic(output_topic)
+from fcr_results.fcr_results import main, schedule_daily_run
 
 if __name__ == "__main__":
-    app.run(sdf)
+    # Sofortige Ausführung beim Start
+    df = main()
+    
+    # Starten des Schedulers
+    schedule_daily_run()
