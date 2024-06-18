@@ -6,6 +6,9 @@ __pycache__/
 # Poetry virtual environments
 .poetry/
 
+# quix stuff
+certificates/
+
 # Distribution / packaging
 .Python
 env/
