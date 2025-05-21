@@ -63,6 +63,8 @@ input_xlsx_file = os.path.join(results_folder, output_filename)
 output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
 def expand_rows_and_add_time(df):
+    """Expands rows by time range specified in PRODUCTNAME and adds a date_valid
+    column."""
     expanded_rows = []
     for _, row in df.iterrows():
         product_parts = row['PRODUCTNAME'].split('_')
@@ -103,6 +105,7 @@ topic = app.topic(name=os.environ["output"], value_serializer="json")
 
 
 def send_to_stream(df, topic):
+    """Sends DataFrame rows to a Kafka stream as JSON messages."""
     with app.get_producer() as producer:
         try:
             json_str = df.to_json(orient="records", date_format="iso")
