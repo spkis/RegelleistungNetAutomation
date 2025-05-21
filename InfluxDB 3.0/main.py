@@ -43,6 +43,16 @@ influx3_client = InfluxDBClient3(token=os.environ["INFLUXDB_TOKEN"],
                          database=os.environ["INFLUXDB_DATABASE"])
 
 def send_data_to_influx(message):
+    """Processes a message and sends it to InfluxDB.
+    
+    This function extracts data from the input message, creates a structured point
+    dictionary, and writes it to InfluxDB using an InfluxDB client. It handles
+    errors related to missing keys in the message and logs appropriate information
+    during processing.
+    
+    Args:
+        message (dict): A dictionary containing the data to be sent to InfluxDB.
+    """
     logger.info(f"Processing message: {message}")
     points = None  # Initialize points to ensure it exists
     try:

@@ -64,10 +64,8 @@ except Exception as e:
 import shutil
 
 def move_file_to_folder(file_name, target_folder):
-    """
-    Move a file to a specific folder.
-    """
     # Create the folder if it doesn't exist
+    """Move a file to a specified folder, creating the folder if it doesn't exist."""
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
     
