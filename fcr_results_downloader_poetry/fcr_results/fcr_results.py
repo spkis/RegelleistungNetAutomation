@@ -15,6 +15,7 @@ from io import BytesIO
 app = Application.Quix()
 
 def download_data():
+    """Download daily tender results data in XLSX format."""
     today = datetime.today().strftime('%Y-%m-%d')
     url = f"https://www.regelleistung.net/apps/cpp-publisher/api/v1/download/tenders/resultsoverview?date={today}&exportFormat=xlsx&market=CAPACITY&productTypes=FCR"
     response = requests.get(url)
@@ -24,6 +25,19 @@ def download_data():
 
 def process_data(file_content, hourly=True):
     # Lesen Sie die Excel-Daten aus dem im Speicher befindlichen Inhalt
+    """Process data from an Excel file content.
+    
+    This function reads the Excel data, ensures that relevant columns are of float
+    type, and processes each row to create a new DataFrame with time-specific
+    entries for each country.
+    
+    Args:
+        file_content (str): The path or buffer containing the Excel file content.
+        hourly (bool): A flag indicating whether to process data on an hourly basis. Defaults to True.
+    
+    Returns:
+        pd.DataFrame: A DataFrame containing processed and transformed data.
+    """
     df = pd.read_excel(file_content)
     
     # Sicherstellen, dass alle relevanten Felder float sind
@@ -87,6 +101,7 @@ def process_data(file_content, hourly=True):
     return new_df
 
 def save_data(df):
+    """Save DataFrame to a CSV file with today's date in the filename."""
     today = datetime.today().strftime('%Y%m%d')
     file_name = f"fcr_results_{today}.csv"
     df.to_csv(file_name, index=False)
@@ -98,6 +113,7 @@ topic = app.topic(name=os.environ["output"], value_serializer="json")
 
 
 def send_to_stream(df, topic):
+    """Sends DataFrame rows to a Kafka stream as JSON messages."""
     with app.get_producer() as producer:
         try:
             json_str = df.to_json(orient="records", date_format="iso")
@@ -115,6 +131,7 @@ def send_to_stream(df, topic):
         print("Done.")
 
 def main():
+    """Download data, process it, and send to stream."""
     file_content = download_data()
     df = process_data(file_content, hourly=True)  # Setzen Sie hourly=False, um vierstündliche Daten zu verwenden
     save_data(df)
@@ -122,6 +139,7 @@ def main():
     return df
 
 def schedule_daily_run():
+    """Schedule a daily run of the main function at 10:00 AM."""
     schedule.every().day.at("10:00").do(main)
 
     while True:
