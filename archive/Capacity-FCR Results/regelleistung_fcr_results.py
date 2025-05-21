@@ -44,6 +44,7 @@ input_xlsx_file = os.path.join(results_folder, output_filename)
 output_csv_file = f'output_{measurement_name}_{current_date}.csv'
 
 def expand_rows_and_add_time(df):
+    """Expands rows based on product hours and adds a timestamp."""
     expanded_rows = []
     for _, row in df.iterrows():
         product_parts = row['PRODUCTNAME'].split('_')
@@ -83,10 +84,9 @@ except Exception as e:
 import shutil
 
 def move_file_to_folder(file_name, target_folder):
-    """
-    Move a file to a specific folder.
-    """
     # Create the folder if it doesn't exist
+    """Moves a specified file to a target folder, creating the folder if it doesn't
+    exist."""
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
     
