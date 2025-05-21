@@ -35,6 +35,7 @@ try:
         
         # Process the DataFrame as before
         def expand_rows_and_add_time(df):
+            """Expands rows by splitting product hours and adds a valid date column."""
             expanded_rows = []
             for _, row in df.iterrows():
                 product_parts = row['PRODUCTNAME'].split('_')
